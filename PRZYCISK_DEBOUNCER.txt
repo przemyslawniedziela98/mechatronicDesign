@@ -1,0 +1,31 @@
+int ledState = HIGH;         // aktualny stany
+int buttonState;             
+int lastButtonState = LOW;   // ostatni stan
+
+unsigned long lastDebounceTime = 0;  
+unsigned long debounceDelay = 50;    
+
+void setup() {
+  pinMode(2, INPUT); //pin 2 jako wej
+  pinMode(13, OUTPUT); // pin 13 jako wyj 
+  digitalWrite(13, ledState);
+}
+
+void loop() {
+  int reading = digitalRead(2);
+  if (reading != lastButtonState) {
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (reading != buttonState) {
+      buttonState = reading;
+      if (buttonState == HIGH) {
+        ledState = !ledState;
+      }
+    }
+  }
+
+  digitalWrite(13, ledState);
+  lastButtonState = reading;
+}

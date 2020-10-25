@@ -1,0 +1,47 @@
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+int cm = 0;
+
+long readUltrasonicDistance(int triggerPin, int echoPin)
+{
+  pinMode(triggerPin, OUTPUT);
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
+  pinMode(echoPin, INPUT);
+  return pulseIn(echoPin, HIGH);
+}
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(10, INPUT); 
+  pinMode(9, OUTPUT);
+  lcd.begin(16, 2);
+  lcd.clear();
+  led_setup();
+}
+
+void loop()
+{
+  cm = 0.01723 * readUltrasonicDistance(9, 10);
+  led_view(cm);
+  delay(100); 
+}
+void led_setup()
+{
+  lcd.setCursor(0,0);
+  lcd.print("WITAJ");
+  delay(4000); 
+}
+void led_view(int dystans)
+{
+  lcd.setCursor(0,0);
+  lcd.print("Dystans");
+  lcd.setCursor(0,1);
+  lcd.print(dystans);
+  lcd.setCursor(7,1);
+  lcd.print("cm");
+}
